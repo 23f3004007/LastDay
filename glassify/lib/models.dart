@@ -1,10 +1,10 @@
 class Deadline {
   final String emailId;
   final String subject;
-  final String sender; // <--- New field
+  final String sender;
   final DateTime deadlineTime;
   final String snippet;
-  bool isImportant; // Local UI state
+  bool isImportant;
 
   Deadline({
     required this.emailId,
@@ -19,7 +19,6 @@ class Deadline {
     return Deadline(
       emailId: json['email_id'],
       subject: json['subject'] ?? "No Subject",
-      // Ensure your backend sends this key correctly
       sender: json['sender'] ?? "Unknown", 
       deadlineTime: DateTime.parse(json['deadline_time']),
       snippet: json['snippet'] ?? "",

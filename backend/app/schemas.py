@@ -16,6 +16,18 @@ class SyncResponse(BaseModel):
 
 class FeedbackRequest(BaseModel):
     email_id: str
-    subject: str  # <--- ADD THIS LINE
+    subject: str  
     snippet: str
-    is_spam: bool
+    is_spam: bool 
+
+class ExchangeRequest(BaseModel):
+    code: str
+
+class MessageIn(BaseModel):
+    email_id: str
+    subject: Optional[str] = None
+    snippet: str
+    thread_id: Optional[str] = None
+
+class BatchIn(BaseModel):
+    messages: List[MessageIn]
