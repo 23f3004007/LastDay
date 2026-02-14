@@ -1,0 +1,33 @@
+# --- Security (NEVER UPLOAD THESE) ---
+backend/app/credentials.json
+backend/app/token.json
+backend/.env
+backend/app/.env
+
+# --- Local Python Junk ---
+__pycache__/
+*.py[cod]
+backend/app/venv/
+backend/venv/
+
+# --- Local Data & Logs ---
+backend/app/labelled_emails.csv
+backend/app/negative_samples.txt
+backend/app/user_models/
+
+# --- Old/Local Scripts (Optional) ---
+# You can keep these on GitHub if you want to save your work, 
+# but they aren't needed for the server to run.
+# Uncomment lines below if you want to hide them too.
+# backend/app/fetch_dataset.py
+# backend/app/generate_token.py
+# backend/app/train_model.py
+
+# --- Flutter Build Files (Reduce upload size) ---
+glassify/build/
+glassify/.dart_tool/
+glassify/.flutter-plugins
+glassify/.flutter-plugins-dependencies
+glassify/.pub-cache/
+
+glassify/lib/secrets.dart
