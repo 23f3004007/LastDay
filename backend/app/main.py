@@ -33,14 +33,8 @@ class FeedbackRequest(BaseModel):
 # --- FIX: Absolute Path for Model Loading ---
 # This ensures it finds the file regardless of where you run the command from
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, 'spam_classifier.pkl')
 
-try:
-    spam_model = joblib.load(MODEL_PATH)
-    print(f"✅ ML Filter Loaded from: {MODEL_PATH}")
-except Exception as e:
-    spam_model = None
-    print(f"⚠️ WARNING: Could not load spam_classifier.pkl. Running without filter.\nError: {e}")
+
 
 # --- Data Models ---
 class FeedbackRequest(BaseModel):
