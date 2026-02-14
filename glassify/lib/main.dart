@@ -12,7 +12,7 @@ import 'package:android_intent_plus/flag.dart';
 import 'api_service.dart';
 import 'models.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async'; // Required for Timer
+import 'dart:async'; 
 import 'secrets.dart';
 
 // --- THEME COLORS ---
@@ -20,46 +20,43 @@ const Color kBackground = Color(0xFF0B0F19);
 const Color kSurface = Color(0xFF151A25);
 const Color kAccent = Color(0xFF00F0FF);
 const Color kDanger = Color(0xFFFF2A6D);
-const Color kImportant = Color(0xFFFFD700); // Gold for important items
+const Color kImportant = Color(0xFFFFD700); 
 const Color kTextWhite = Color(0xFFE0E6ED);
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+// --- ENTRY POINT ---
 void main() async {
-  // 1. Always first
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    // 2. Wrap risky setup in try-catch
     tz.initializeTimeZones();
 
+    // ensure this matches your actual icon filename in android/app/src/main/res/mipmap-*
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/launcher_icon');
+        AndroidInitializationSettings('@mipmap/launcher_icon'); 
     
     final InitializationSettings initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
 
-    // 3. Add timeout or error handling for plugins
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) async {
         if (details.payload != null) {
-           // Make sure _launchGmail is actually defined globally!
            _launchGmail(details.payload!); 
         }
       },
     );
   } catch (e, stack) {
-    // 4. Log the error so you can see it in 'flutter run --release'
     print("💥 CRITICAL ERROR DURING STARTUP: $e");
     print(stack);
   }
 
-  // 5. This line MUST execute for the screen to turn on
   runApp(const LastDayApp());
 }
 
+// --- GLOBAL UTILS ---
 Future<void> _launchGmail(String emailId) async {
   final String nativeUrl = "googlegmail:///v1/account/me/thread/$emailId";
   final Uri webUrl = Uri.parse("https://mail.google.com/mail/u/0/#inbox/$emailId");
@@ -103,17 +100,16 @@ Color getUrgencyColor(DateTime date) {
   return kAccent;
 }
 
-// Helper to extract pure email from format like "Name <email@example.com>"
 String extractEmailAddress(String rawSender) {
   final RegExp regex = RegExp(r'<([^>]+)>');
   final match = regex.firstMatch(rawSender);
   if (match != null && match.groupCount >= 1) {
     return match.group(1)!;
   }
-  return rawSender; // Fallback if no brackets found
+  return rawSender; 
 }
 
-
+// --- MAIN APP WIDGET ---
 class LastDayApp extends StatelessWidget {
   const LastDayApp({super.key});
   @override
@@ -136,7 +132,7 @@ class LastDayApp extends StatelessWidget {
   }
 }
 
-// --- UPDATED CARD WITH LONG PRESS ---
+// --- WIDGETS ---
 class DeadlineCard extends StatelessWidget {
   final Deadline item;
   final VoidCallback onTap;
@@ -154,8 +150,6 @@ class DeadlineCard extends StatelessWidget {
     final stripColor = item.isImportant ? kImportant : getUrgencyColor(item.deadlineTime);
     final relativeTime = getRelativeTime(item.deadlineTime);
     final displayName = item.sender.split('<')[0].trim();
-    
-    // Format for specific Date & Time (e.g., "Feb 10 • 5:30 PM")
     final String specificDateTime = DateFormat('MMM dd • h:mm a').format(item.deadlineTime);
 
     return Container(
@@ -180,7 +174,6 @@ class DeadlineCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Colored Strip
                 Container(
                   width: 4,
                   decoration: BoxDecoration(
@@ -189,15 +182,12 @@ class DeadlineCard extends StatelessWidget {
                     boxShadow: [BoxShadow(color: stripColor.withOpacity(0.4), blurRadius: 8)],
                   ),
                 ),
-                
-                // Content Stack
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // --- 1. Subject & Badge ---
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -215,7 +205,6 @@ class DeadlineCard extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            // Relative Badge (e.g. "IN 2 DAYS")
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
@@ -230,13 +219,9 @@ class DeadlineCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        
                         const SizedBox(height: 8),
-
-                        // --- 2. Sender & EXACT TIME (New Row) ---
                         Row(
                           children: [
-                            // Sender Name
                             Icon(Icons.person_outline, size: 12, color: Colors.grey[500]),
                             const SizedBox(width: 4),
                             Flexible(
@@ -247,15 +232,11 @@ class DeadlineCard extends StatelessWidget {
                                 style: TextStyle(fontSize: 12, color: Colors.grey[400]),
                               ),
                             ),
-                            
-                            // Spacer to push time to the right
                             const Spacer(),
-                            
-                            // EXACT TIME DISPLAY
                             Icon(Icons.access_time, size: 12, color: kAccent),
                             const SizedBox(width: 4),
                             Text(
-                              specificDateTime, // Shows "Feb 10 • 5:30 PM"
+                              specificDateTime, 
                               style: const TextStyle(
                                 fontSize: 12, 
                                 color: kTextWhite, 
@@ -264,10 +245,7 @@ class DeadlineCard extends StatelessWidget {
                             ),
                           ],
                         ),
-
                         const SizedBox(height: 8),
-
-                        // --- 3. Snippet ---
                         Text(
                           item.snippet,
                           maxLines: 2,
@@ -292,6 +270,7 @@ class DeadlineCard extends StatelessWidget {
   }
 }
 
+// --- SCREENS ---
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
   @override
@@ -329,7 +308,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final String _serverClientId = kGoogleClientId; // DO NOT FORGET TO UPDATE
+  // Use the kGoogleClientId from your secrets.dart file
+  final String _serverClientId = kGoogleClientId; 
   late GoogleSignIn _googleSignIn;
   final ApiService _api = ApiService();
   bool _isLoading = false;
@@ -395,7 +375,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-
 class HomeScreen extends StatefulWidget {
   final String accessToken;
   const HomeScreen({super.key, required this.accessToken});
@@ -407,11 +386,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final ApiService _api = ApiService();
   List<Deadline> _deadlines = [];
   bool _isLoading = false;
-  
-  // Timer for Auto-Sync
   Timer? _syncTimer;
 
-  // Local state for ignored items and important items
   List<String> _ignoredEmailIds = []; 
   List<String> _blockedSenders = [];
   Set<String> _importantEmailIds = {};
@@ -421,11 +397,10 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _loadLocalState(); 
     
-    // --- ⏰ AUTO SYNC TIMER (5 Minutes) ---
+    // Auto sync every 5 minutes
     _syncTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
       if (mounted) {
         print("⏰ 5-minute timer triggered: Syncing now...");
-        // Pass 'true' so we don't show the full loading spinner for background syncs
         _handleSync(isBackground: true); 
       }
     });
@@ -433,7 +408,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    // Cancel timer when screen closes to stop memory leaks
     _syncTimer?.cancel();
     super.dispose();
   }
@@ -445,11 +419,9 @@ class _HomeScreenState extends State<HomeScreen> {
       _blockedSenders = prefs.getStringList('blocked_senders') ?? [];
       _importantEmailIds = (prefs.getStringList('important_emails') ?? []).toSet();
     });
-    // Initial sync (show loader)
     _handleSync(isBackground: false); 
   }
 
-  // Updated to accept isBackground parameter
   Future<void> _handleSync({bool isBackground = false}) async {
     if (!isBackground) {
       setState(() => _isLoading = true);
@@ -458,32 +430,22 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final rawDeadlines = await _api.syncEmails(widget.accessToken);
       
-      // Apply local "Important" state
       for (var item in rawDeadlines) {
         if (_importantEmailIds.contains(item.emailId)) {
           item.isImportant = true;
         }
       }
 
-      // FILTERING LOGIC
       final filteredDeadlines = rawDeadlines.where((item) {
         final isIgnoredId = _ignoredEmailIds.contains(item.emailId);
         final pureSenderEmail = extractEmailAddress(item.sender);
         final isBlockedSender = _blockedSenders.contains(pureSenderEmail);
-        
-        // --- REMOVED THE OVERDUE CHECK ---
-        // We trust the Backend AI. If it sent the email, it's relevant.
-        // Even if the deadline passed (or was never found), we want to see it!
-        
         return !isIgnoredId && !isBlockedSender; 
       }).toList();
 
-      // SORT: Important first, then by time
       filteredDeadlines.sort((a, b) {
         if (a.isImportant && !b.isImportant) return -1;
         if (!a.isImportant && b.isImportant) return 1;
-        
-        // If the date is the same (e.g. multiple job offers received at same time), sort by subject
         int comparison = a.deadlineTime.compareTo(b.deadlineTime);
         if (comparison == 0) {
             return a.subject.compareTo(b.subject);
@@ -509,49 +471,37 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // --- ACTION HANDLERS ---
-
   Future<void> _dismissItem(int index, Deadline item, DismissDirection direction) async {
     final prefs = await SharedPreferences.getInstance();
+    
+    // 1. Remove from UI immediately
     setState(() {
       _deadlines.removeAt(index);
       _ignoredEmailIds.add(item.emailId);
     });
+    
+    // 2. Persist local ignore
     await prefs.setStringList('ignored_emails', _ignoredEmailIds);
 
-    if (direction == DismissDirection.endToStart) {
-       // Swiped Left (Red) - Mark Not Important via API
-       try {
-         await http.post(
-           Uri.parse('${ApiService.baseUrl}/feedback'),
-           headers: {'Content-Type': 'application/json'},
-           body: jsonEncode({"email_id": item.emailId, "snippet": item.snippet, "is_important": false}),
-         );
-       } catch (_) {}
+    // 3. Determine if it was spam (Left Swipe) or Done (Right Swipe)
+    //    Right Swipe (StartToEnd) = Done (Green) -> Not Spam
+    //    Left Swipe (EndToStart) = Spam/Not Important (Red) -> Is Spam
+    bool isSpam = (direction == DismissDirection.endToStart);
+
+    if (isSpam) {
        if(mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Marked Not Important (ML Training) 🧠")));
     } else {
-       // Swiped Right (Green) - Done
        if(mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Marked as Done ✅")));
     }
-    bool isImportant = (direction == DismissDirection.startToEnd);
     
-    try {
-      await http.post(
-        Uri.parse('${ApiService.baseUrl}/feedback'),
-        headers: {
-            'Content-Type': 'application/json',
-            // IMPORTANT: Send the token so backend knows WHICH user is swiping
-            'Authorization': 'Bearer ${widget.accessToken}' 
-        },
-        body: jsonEncode({
-            "email_id": item.emailId, 
-            "snippet": item.snippet, 
-            "subject": item.subject, // <--- Add this
-            "is_important": isImportant
-        }),
-      );
-    } catch (e) {
-        print("Failed to send feedback: $e");
-    }
+    // 4. Send API Feedback
+    //    We call sendFeedback from the ApiService with ALL required arguments
+    _api.sendFeedback(
+      item.emailId, 
+      item.subject,  // <--- This was missing before
+      item.snippet, 
+      isSpam
+    );
   }
 
   Future<void> _toggleImportance(Deadline item) async {
@@ -563,7 +513,6 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         _importantEmailIds.remove(item.emailId);
       }
-      // Re-sort immediately
       _deadlines.sort((a, b) {
          if (a.isImportant && !b.isImportant) return -1;
          if (!a.isImportant && b.isImportant) return 1;
@@ -571,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     });
     await prefs.setStringList('important_emails', _importantEmailIds.toList());
-    Navigator.pop(context); // Close bottom sheet
+    Navigator.pop(context); 
   }
 
   Future<void> _blockSender(String rawSender) async {
@@ -579,15 +528,13 @@ class _HomeScreenState extends State<HomeScreen> {
     final pureEmail = extractEmailAddress(rawSender);
     setState(() {
       _blockedSenders.add(pureEmail);
-      // Immediately remove items from this sender currently in view
       _deadlines.removeWhere((item) => extractEmailAddress(item.sender) == pureEmail);
     });
     await prefs.setStringList('blocked_senders', _blockedSenders);
-    if(mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Blocked all future reminders from: $pureEmail 🚫")));
-    Navigator.pop(context); // Close bottom sheet
+    if(mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Blocked all reminders from: $pureEmail 🚫")));
+    Navigator.pop(context); 
   }
 
-  // --- LONG PRESS MENU ---
   void _showOptionsModal(Deadline item) {
     final pureSender = extractEmailAddress(item.sender);
     showModalBottomSheet(
@@ -623,7 +570,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
-    // Stop the timer on logout
     _syncTimer?.cancel();
     if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
   }
@@ -635,7 +581,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("LASTDAY"), centerTitle: true,
         actions: [
-          // Manual sync button still calls sync with full loading spinner
           IconButton(icon: const Icon(Icons.sync, color: kAccent), onPressed: () => _handleSync(isBackground: false)),
           IconButton(icon: const Icon(Icons.logout, color: Colors.grey), onPressed: _logout),
         ],
@@ -651,7 +596,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: _deadlines.length,
                           itemBuilder: (context, index) {
                             final item = _deadlines[index];
-                            // RESTORED DISMISSIBLE
                             return Dismissible(
                               key: Key(item.emailId), 
                               background: Container(
@@ -664,14 +608,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 alignment: Alignment.centerRight, padding: const EdgeInsets.only(right: 20),
                                 child: const Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.delete_forever, color: Colors.white), Text("Not Important", style: TextStyle(color: Colors.white, fontSize: 10))])
                               ),
-                              onDismissed: (direction) {
-                                bool isSpam = (direction == DismissDirection.endToStart);
-                                _api.sendFeedback(item.emailId, item.subject, item.snippet, isSpam);
-                                },
+                              onDismissed: (direction) => _dismissItem(index, item, direction), // Cleaned up call
                               child: DeadlineCard(
                                 item: item,
                                 onTap: () => _launchGmail(item.emailId),
-                                onLongPress: () => _showOptionsModal(item), // Long press activated
+                                onLongPress: () => _showOptionsModal(item), 
                               ),
                             );
                           },
