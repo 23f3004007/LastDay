@@ -108,13 +108,13 @@ flutter run
 ## Deployment
 ## Backend (Render)
 - The backend is deployed on Render using the free tier.
-- Build Command: ```bash pip install -r requirements.txt ```
-- Start Command: ```bash uvicorn app.main:app --host 0.0.0.0 --port 10000 ```
+- Build Command: ```pip install -r requirements.txt```
+- Start Command: ```uvicorn app.main:app --host 0.0.0.0 --port 10000```
 
 ## Frontend (Android)
 - The APK is built using GitHub Actions (or manually) and released via GitHub Releases.
 - Go to the Releases section.
-- Download ```bash app-release.apk ```
+- Download ```app-release.apk```
 - Install on your Android device.
 ## Privacy Policy
 - LastDay is a student project designed with privacy in mind.
