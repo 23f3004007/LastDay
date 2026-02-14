@@ -74,4 +74,10 @@ class ApiService {
       print("Error sending feedback: $e");
     }
   }
+  Future<Map<String, String>> _getHeaders() async {
+    return {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    };
+  }
 }
