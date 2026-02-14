@@ -13,3 +13,9 @@ class SyncResponse(BaseModel):
     status: str
     new_deadlines_found: int
     deadlines: List[Deadline]
+
+class FeedbackRequest(BaseModel):
+    email_id: str
+    subject: str  # <--- ADD THIS LINE
+    snippet: str
+    is_spam: bool

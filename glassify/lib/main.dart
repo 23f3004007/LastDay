@@ -27,23 +27,36 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 void main() async {
+  // 1. Always first
   WidgetsFlutterBinding.ensureInitialized();
-  tz.initializeTimeZones();
-  
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-  final InitializationSettings initializationSettings =
-      InitializationSettings(android: initializationSettingsAndroid);
-  
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    onDidReceiveNotificationResponse: (NotificationResponse details) async {
-      if (details.payload != null) {
-         _launchGmail(details.payload!);
-      }
-    },
-  );
 
+  try {
+    // 2. Wrap risky setup in try-catch
+    tz.initializeTimeZones();
+
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/launcher_icon');
+    
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    // 3. Add timeout or error handling for plugins
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse details) async {
+        if (details.payload != null) {
+           // Make sure _launchGmail is actually defined globally!
+           _launchGmail(details.payload!); 
+        }
+      },
+    );
+  } catch (e, stack) {
+    // 4. Log the error so you can see it in 'flutter run --release'
+    print("💥 CRITICAL ERROR DURING STARTUP: $e");
+    print(stack);
+  }
+
+  // 5. This line MUST execute for the screen to turn on
   runApp(const LastDayApp());
 }
 
@@ -651,7 +664,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 alignment: Alignment.centerRight, padding: const EdgeInsets.only(right: 20),
                                 child: const Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.delete_forever, color: Colors.white), Text("Not Important", style: TextStyle(color: Colors.white, fontSize: 10))])
                               ),
-                              onDismissed: (direction) => _dismissItem(index, item, direction),
+                              onDismissed: (direction) {
+                                bool isSpam = (direction == DismissDirection.endToStart);
+                                _api.sendFeedback(item.emailId, item.subject, item.snippet, isSpam);
+                                },
                               child: DeadlineCard(
                                 item: item,
                                 onTap: () => _launchGmail(item.emailId),

@@ -6,7 +6,7 @@ class ApiService {
   // Use 10.0.2.2 for Android Emulator to access localhost
   // If using a physical device, use your PC's local IP (e.g., 192.168.1.X)
   // FOR USB CONNECTION (ADB REVERSE)
-  static const String baseUrl = "http://10.0.2.2:8000"; 
+  static const String baseUrl = "https://lastday-backend.onrender.com"; 
 
   // Endpoint: /auth/exchange
   Future<String?> exchangeCodeForToken(String serverAuthCode) async {
@@ -50,6 +50,28 @@ class ApiService {
       }
     } catch (e) {
       throw Exception("Error syncing: $e");
+    }
+  }
+  Future<void> sendFeedback(String emailId, String subject, String snippet, bool isSpam) async {
+    final url = Uri.parse("$baseUrl/feedback");
+    
+    try {
+      final response = await http.post(
+        url,
+        headers: await _getHeaders(),
+        body: jsonEncode({
+          "email_id": emailId,
+          "subject": subject, // <--- Add this
+          "snippet": snippet,
+          "is_spam": isSpam,
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        print("Feedback failed: ${response.body}");
+      }
+    } catch (e) {
+      print("Error sending feedback: $e");
     }
   }
 }
