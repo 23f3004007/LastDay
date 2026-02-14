@@ -4,7 +4,8 @@ Never miss a deadline again. LastDay connects to your Gmail, uses Machine Learni
 ![WhatsApp Image 2026-02-14 at 16 03 36](https://github.com/user-attachments/assets/7ab48e25-3246-406e-ad01-188a8c067fe7)
 
 ## Architecture Diagram
-<img width="512" height="386" alt="System Architecture Diagram" src="https://github.com/user-attachments/assets/8f633c53-7d4c-4e69-b654-f840314dc584" />
+<img width="2062" height="1552" alt="System Architecture Diagram" src="https://github.com/user-attachments/assets/8c14c82f-0307-4e77-a0c7-a7dde7e26209" />
+
 
 ## Key Features
 ### Intelligent Parsing
