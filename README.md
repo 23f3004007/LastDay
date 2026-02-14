@@ -1,5 +1,10 @@
 # LastDay - AI-Powered Deadline Manager & Email Organizer
 Never miss a deadline again. LastDay connects to your Gmail, uses Machine Learning to filter spam, and intelligently extracts hidden due dates from email bodies (e.g., "Project submission is due next Friday at 5 PM").
+![WhatsApp Image 2026-02-14 at 16 05 03](https://github.com/user-attachments/assets/f21f1da6-8a33-48b3-84fd-b88c7b4beec3)
+![WhatsApp Image 2026-02-14 at 16 03 36](https://github.com/user-attachments/assets/7ab48e25-3246-406e-ad01-188a8c067fe7)
+
+## Architecture Diagram
+<img width="512" height="386" alt="System Architecture Diagram" src="https://github.com/user-attachments/assets/8f633c53-7d4c-4e69-b654-f840314dc584" />
 
 ## Key Features
 ### Intelligent Parsing
